@@ -1,5 +1,7 @@
 # BigData Republic Infra Stack
 
+![Travis CI Build Status](https://travis-ci.org/BigDataRepublic/bdr-infra-stack.svg?branch=develop)
+
 The goal of this repository is two-fold:
 
 1. Provide hands-on tutorials for deploying Big Data infrastructure components on some specific cloud provider and/or on-premise (see [docs](docs/README.md)).
