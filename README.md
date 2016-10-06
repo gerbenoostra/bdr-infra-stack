@@ -1,6 +1,6 @@
 # BigData Republic Infra Stack
 
-![Travis CI Build Status](https://travis-ci.org/BigDataRepublic/bdr-infra-stack.svg?branch=develop)
+[![Build Status](https://travis-ci.org/BigDataRepublic/bdr-infra-stack.svg?branch=develop)](https://travis-ci.org/BigDataRepublic/bdr-infra-stack)
 
 The goal of this repository is two-fold:
 
