@@ -5,12 +5,14 @@
   become: yes
 
 - name:  Get latest ccm version
+  become: yes
   git:
     repo: https://github.com/pcmanus/ccm.git
     dest: ~/checkouts/ccm
     update: no
 
 - name: Install ccm
+  become: yes
   command: ./setup.py install
   args:
     chdir: ~/checkouts/ccm
