@@ -1,0 +1,7 @@
+---
+- hosts: all
+
+# Note that the variables here must match provision.yml
+  roles:
+    - { role: spark_client_kernel, anaconda_install_dir: "{{ ansible_env.HOME}}/anaconda3", spark_client_version: "1.6.3-hadoop-2.6"}
+    - { role: spark_client_kernel, anaconda_install_dir: "{{ ansible_env.HOME}}/anaconda3", spark_client_version: "2.0.2-hadoop-2.7"}

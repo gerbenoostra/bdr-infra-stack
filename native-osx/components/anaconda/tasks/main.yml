@@ -1,0 +1,29 @@
+---
+
+- name: Purge current Anaconda installation
+  file: path={{ anaconda_install_dir }} state=absent
+  when: anaconda_force_install
+
+- name: Check for current Anaconda installation
+  stat: path={{ anaconda_install_dir }}
+  register: tmp_anaconda_install
+
+- name: Download anaconda
+  get_url:
+    url: "{{ anaconda_url }}"
+    dest: /tmp/install-anaconda.sh
+    mode: 0744
+  when: tmp_anaconda_install.stat.exists == False
+
+- name: Install Anaconda
+  shell: /tmp/install-anaconda.sh -b -p {{ anaconda_install_dir }} -f
+  when: tmp_anaconda_install.stat.exists == False
+
+- name: Ensure anaconda is on PATH
+  lineinfile:
+    dest="~/.bash_profile"
+    regexp=''
+    insertafter=EOF
+    create=False
+    line='export ANACONDA_ROOT={{ anaconda_install_dir }}\nexport PATH=$ANACONDA_ROOT/bin:$PATH\nexport PYSPARK_DRIVER_PYTHON=$ANACONDA_ROOT/bin/ipython\nexport PYSPARK_PYTHON=$ANACONDA_ROOT/bin/python'
+  when: tmp_anaconda_install.stat.exists == False

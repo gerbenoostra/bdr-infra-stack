@@ -1,0 +1,3 @@
+spark_client_install_dir: "{{ ansible_env.HOME}}/spark-clients"
+anaconda_install_dir: "{{ ansible_env.HOME}}/anaconda"
+#spark_client_conda_env: '2.7'

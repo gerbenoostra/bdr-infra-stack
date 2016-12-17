@@ -1,0 +1,2 @@
+spark_client_install_dir: "{{ ansible_env.HOME}}/spark-clients"
+spark_client_force_install: False
