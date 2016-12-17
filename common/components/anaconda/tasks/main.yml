@@ -8,16 +8,14 @@
   stat: path={{ anaconda_install_dir }}
   register: tmp_anaconda_install
 
-
-- name: Download Anaconda 3
+- name: Download anaconda
   get_url:
-    url: https://repo.continuum.io/archive/Anaconda3-4.1.1-Linux-x86_64.sh
+    url: "{{ anaconda_url }}"
     dest: /tmp/install-anaconda.sh
     mode: 0744
   when: tmp_anaconda_install.stat.exists == False
 
-
-- name: Install Anaconda 3
+- name: Install Anaconda
   shell: /tmp/install-anaconda.sh -b -p {{ anaconda_install_dir }} -f
   when: tmp_anaconda_install.stat.exists == False
 

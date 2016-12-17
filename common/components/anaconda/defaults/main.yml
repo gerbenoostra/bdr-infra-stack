@@ -1,3 +1,4 @@
 ---
 anaconda_force_install: False
 anaconda_install_dir: /opt/anaconda
+anaconda_url: https://repo.continuum.io/archive/Anaconda3-4.1.1-Linux-x86_64.sh
