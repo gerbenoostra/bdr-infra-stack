@@ -27,3 +27,6 @@
     create=False
     line='export ANACONDA_ROOT={{ anaconda_install_dir }}\nexport PATH=$ANACONDA_ROOT/bin:$PATH\nexport PYSPARK_DRIVER_PYTHON=$ANACONDA_ROOT/bin/ipython\nexport PYSPARK_PYTHON=$ANACONDA_ROOT/bin/python'
   when: tmp_anaconda_install.stat.exists == False
+
+- name: Install jupyter notebook pdf export
+  pip: name=nbbrowserpdf
