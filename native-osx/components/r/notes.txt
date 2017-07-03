@@ -1,0 +1,18 @@
+>conda create -n conda-r -c r r-essentials
+>source activate conda-r
+>conda install -c r r-survival r-ggplot2 r-plyr r-hms r-Hmisc r-randomforest r-doparallel
+(conda-r)>conda install -c r r-devtools
+(conda-r)>conda install -c uvcdat gfortran
+(conda-r)>r
+r> install.packages("pacman")
+r> pacman::p_load("survival", "ggplot2", "plyr", "pec", "rms", "Hmisc", "randomForestSRC", "parallel")
+r> pacman::p_load("randomForestSRC","ggRandomForests","parallel")
+
+// r> devtools::install_github("hadley/devtools") (fails with missing gnutar, possibly mitigated by r-devtools
+
+#
+> R
+r> install.packages('devtools')
+r> devtools::install_github("hadley/devtools")
+r> devtools::install_github('IRkernel/IRkernel')
+r> IRkernel::installspec(name = 'ir33', displayname = 'R 3.3')
