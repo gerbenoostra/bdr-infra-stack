@@ -1,0 +1,23 @@
+---
+
+- name: Check for current brew installation
+  stat: path=/usr/local/bin/brew
+  register: tmp_brew_install
+
+- name: Install brew
+  shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  when: tmp_brew_install.stat.exists == False
+
+- name: Update brew
+  shell: brew update
+  when: tmp_brew_install.stat.exists == False
+
+- name: Append brew to bash profile
+  lineinfile:
+    dest="~/.bash_profile"
+    regexp=''
+    insertafter=EOF
+    create=False
+    line='# Homebrew\nexport PATH=/usr/local/bin:$PATH\n'
+  when: tmp_brew_install.stat.exists == False
+
