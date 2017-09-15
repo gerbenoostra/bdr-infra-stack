@@ -33,3 +33,18 @@
 
 - name: Upgrade conda to latest version
   shell: conda update --prefix {{ anaconda_install_dir } anaconda
+
+- name: Install conda auto completion
+  shell: conda install argcomplete
+
+- name: Install new nb_kernel plugin
+  shell: conda install -c conda-forge nb_conda_kernels
+
+- name: Enable conda auto completion
+  lineinfile:
+    dest="~/.bash_profile"
+    regexp=''
+    insertafter=EOF
+    create=False
+    line='eval "$(register-python-argcomplete conda)"'
+
