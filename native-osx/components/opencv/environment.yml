@@ -1,0 +1,27 @@
+name: opencv
+dependencies:
+ - python=3.5
+# - menpo::opencv3
+#bouwt niet - ver228::opencv3=3.2.0
+#:boutw&runt- jlaura::opencv3=3.0.0 (maar dus oud...)
+ - cmake
+ - boost
+# - gcc  : Especially don't use gcc, need the native compiler
+ - pkgconfig
+ - conda-forge::ffmpeg
+ - numpy
+ - libpng
+ - tensorflow
+ - jupyter
+ - matplotlib
+ - seaborn
+ - pandas
+ - scipy>=0.9
+ - scikit-learn>=0.18
+ - scikit-image
+ - shapely
+ - pip
+ - pip:
+   #- opencv-python
+   - google-cloud-vision
+   - regex
