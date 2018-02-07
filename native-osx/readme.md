@@ -1,10 +1,24 @@
-# Setting up your python environment with spark
+# Setting up dev machine
 
-First install ansible, using which we install all our tools like conda, and spark binaries. 
+To install all your packages, just run:
 
      ./install_ansible.sh
      ./provision.sh
 
+The provision script will run ansible to provision your local dev machine. 
+This includes steps to upgrade packages (like brew, anaconda).
+To skip the updates, just run:
+ 
+     ./provision --skip-tags "notification"
+
+For most roles there is a corresponding tag. For example:
+
+    ./provision --tags "anaconda"
+
+
+# Setting up your python environment with spark
+
+First install ansible, using which we install all our tools like conda, and spark binaries. 
 Using conda, create your project environments, like for example:
 
      conda env create -f environment.yml

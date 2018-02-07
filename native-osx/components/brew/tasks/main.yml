@@ -10,7 +10,7 @@
 
 - name: Update brew
   shell: brew update
-  when: tmp_brew_install.stat.exists == False
+  tags: update
 
 - name: Append brew to bash profile
   lineinfile:
@@ -20,4 +20,5 @@
     create=False
     line='# Homebrew\nexport PATH=/usr/local/bin:$PATH\n'
   when: tmp_brew_install.stat.exists == False
+  tags: bash_profile
 
