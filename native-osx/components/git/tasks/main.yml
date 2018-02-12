@@ -1,7 +1,10 @@
+---
+
 - name: Copy git auto completion helper
   copy:
-    src= git-completion.bash
-    dest= ~/.git-completion.bash
+    src=git-completion.bash
+    dest=~/.git-completion.bash
+  tags: bash_profile
 
 - name: Add git auto completion line to bash profile
   lineinfile:
