@@ -1,0 +1,107 @@
+---
+
+# check if we have a opencl device
+- name: Check opencl
+  homebrew:
+    name: clinfo
+    state: present
+
+- name: List gpus
+  shell: clinfo -l
+  register: out
+
+- debug: var=out.stdout_lines
+
+# setup python environment
+- name: Purge current deep learning installation
+  file: path={{ gpu_install_dir }} state=absent
+  when: gpu_force_install
+
+- name: Check for current Anaconda installation
+  stat: path={{ gpu_install_dir }}
+  register: tmp_gpu_install
+
+- name: Create deep learning dir
+  file: state=directory dest="{{ gpu_install_dir }}"
+
+- name: Copy environment
+  copy:
+    src=environment.yml
+    dest={{ gpu_install_dir }}/environment.yml
+
+- name: Purge build environment
+  shell: conda env remove {{ gpu_conda_name }}
+  when: gpu_force_install
+
+- name: Check if env exists
+  shell: conda env list | grep -e "{{gpu_conda_name}}.*envs/{{gpu_conda_name}}"
+  register: tmp_conda_envs
+
+- name: Create build environment
+  shell: conda env create -f=environment.yml -n {{ gpu_conda_name }}
+  args:
+    chdir: "{{ gpu_install_dir }}"
+  when: tmp_conda_envs.stdout_lines|length == 0
+  register: out
+
+- name: Update build environment
+  shell: conda env update --name={{ gpu_conda_name }} -f=environment.yml
+  args:
+    chdir: "{{ gpu_install_dir }}"
+  when: tmp_conda_envs.stdout_lines|length > 0
+  register: out
+  tags: update
+
+- debug: var=out.stdout_lines
+
+# Install bazel
+- name: bazel_start
+  shell: echo ""
+# https://docs.bazel.build/versions/master/install-os-x.html
+
+- name: accept xcode license
+  shell: sudo xcodebuild -license accept
+
+- name: check bazel
+  shell: bazel version
+  ignore_errors: yes
+  register: out_bazel_check
+
+- debug: var=out_bazel_check
+
+- name: check bazel installer
+  stat: path=/tmp/install-bazel.sh
+  register: tmp_bazel_install
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/bin"
+
+- name: Remove old bazel installer
+  file: path=/tmp/install-bazel.sh state=absent
+  tags: update
+
+- name: Download bazel
+  get_url:
+    url: "{{ bazel_url }}"
+    dest: /tmp/install-bazel.sh
+    mode: 0744
+  when: (out_bazel_check.failed or gpu_force_install) and tmp_bazel_install.stat.exists == False
+
+- name: Install Bazel
+  shell: /tmp/install-bazel.sh --user
+  when: out_bazel_check.failed or gpu_force_install
+  register: out_bazel_install
+
+- debug: var=out_bazel_install
+
+- name: Add bazel to bash profile
+  lineinfile:
+    dest="~/.bash_profile"
+    regexp=''
+    insertafter=EOF
+    create=False
+    line='export PATH="$PATH:$HOME/bin"\nsource $HOME/.bazel/bin/bazel-complete.bash'
+  when: out_bazel_check.failed or gpu_force_install
+  tags: bash_profile
+
+- name: bazel_end
+  shell: echo ""

@@ -15,6 +15,9 @@ For most roles there is a corresponding tag. For example:
 
     ./provision --tags "anaconda"
 
+Usefull retry command:
+
+    ./provision.sh --tags "gpu" --limit @/Users/gerben/Projects/geroos-infra-stack/native-osx/provision.retry -v --skip-tags "update" --start-at-task="bazel_end"
 
 # Setting up your python environment with spark
 

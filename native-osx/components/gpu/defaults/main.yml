@@ -1,0 +1,6 @@
+---
+gpu_force_install: False
+gpu_install_dir: "{{ ansible_env.HOME}}/tensorflow"
+gpu_url: "https://repo.continuum.io/archive/Anaconda3-4.2.0-MacOSX-x86_64.sh"
+gpu_conda_name: "gpu"
+bazel_url: "https://github.com/bazelbuild/bazel/releases/download/0.13.0/bazel-0.13.0-installer-darwin-x86_64.sh"
