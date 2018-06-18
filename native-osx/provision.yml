@@ -9,7 +9,9 @@
 #    - { role: spark_client, spark_client_version: "1.6.3-hadoop-2.6", spark_client_url: "http://d3kbcqa49mib13.cloudfront.net/spark-1.6.3-bin-hadoop2.6.tgz"}
 #    - { role: spark_client, spark_client_version: "2.0.2-hadoop-2.7", spark_client_url: "http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.7.tgz"}
     - { role: gpu, tags: "gpu",
-        gpu_install_dir: "{{ ansible_env.HOME }}/gpu "
+        gpu_install_dir: "{{ ansible_env.HOME }}/gpu",
+        gpu_force_install: true
     }
+    - { role: h2o, tags: "h2o" }
 
 

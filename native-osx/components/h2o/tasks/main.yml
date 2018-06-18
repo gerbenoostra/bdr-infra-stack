@@ -1,0 +1,20 @@
+---
+
+- name: Copy h2o bootstrap
+  copy:
+    src: h2o_bootstrap
+    dest: /tmp/
+
+- shell: chmod +x /tmp/h2o_bootstrap/*.sh
+- shell: chmod +x /tmp/h2o_bootstrap/h2o/*.sh
+
+- name: Run h2o boostrap
+  shell: ./setup.sh
+  args:
+    chdir: "/tmp/h2o_bootstrap/"
+  register: out
+  ignore_errors: yes
+
+- debug: var=out.stdout_lines
+- debug: var=out.stderr_lines
+
