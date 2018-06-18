@@ -17,7 +17,7 @@
   file: path={{ gpu_install_dir }} state=absent
   when: gpu_force_install
 
-- name: Check for current Anaconda installation
+- name: Check for current gpu installation dir
   stat: path={{ gpu_install_dir }}
   register: tmp_gpu_install
 
@@ -105,3 +105,117 @@
 
 - name: bazel_end
   shell: echo ""
+
+
+- name: Install coreutils
+  homebrew:
+    name: coreutils
+    state: present
+
+- name: Install swig
+  homebrew:
+    name: coreutils
+    state: present
+
+- name: coriander_start
+  shell: echo""
+
+- name: Check for current coriander installation dir
+  stat: path={{ gpu_install_dir }}/tf-coriander
+  register: tmp_coriander_install
+
+- name: get coriander
+  shell: |
+    git clone --recursive https://github.com/hughperkins/tf-coriander
+    cd tf-coriander
+    bash ./install_deps.sh
+  args:
+    chdir: "{{ gpu_install_dir }}"
+  when: tmp_coriander_install.stat.exists == False
+  register: out
+
+- debug: var=out.stdout_lines
+  when: tmp_coriander_install.stat.exists == False
+
+    # git submodule update --recursive --remote or this??
+- name: update coriander
+  shell: |
+    git pull --recurse-submodules
+    git submodule update --init --recursive
+  args:
+    chdir: "{{ gpu_install_dir }}/tf-coriander"
+  register: out
+  tags: update
+
+- debug: var=out.stdout_lines
+
+- name: Copy modified setupscript
+  copy:
+    src=coriander_deps.sh
+    dest={{ gpu_install_dir }}/tf-coriander/install_coriander_deps.sh
+
+- name: install coriander prerequisites
+  shell: |
+    brew install autoconf automake libtool shtool gflags python3 swig
+    source activate gpu && bash ./install_coriander_deps.sh
+  args:
+    chdir: "{{ gpu_install_dir }}/tf-coriander"
+  register: out
+  tags: update
+
+- debug: var=out.stdout_lines
+- debug: var=out.stderr_lines
+
+- name: Copy modified build script
+  copy:
+    src=coriander_build.sh
+    dest={{ gpu_install_dir }}/tf-coriander/build_coriander.sh
+
+- name: build coriander
+  ignore_errors: yes
+  shell: |
+    source activate gpu &  \
+      coriander_build.sh
+  args:
+    chdir: "{{ gpu_install_dir }}/tf-coriander"
+  register: out
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/bin"
+    CLANG_HOME: "{{ gpu_install_dir }}/tf-coriander/soft/llvm-4.0"
+
+
+- debug: var=out.stdout_lines
+- debug: var=out.stderr_lines
+
+- name: install coriander
+  shell: |
+    source activate gpu &&  \
+      pip install --upgrade soft/tensorflowpkg/tensorflow-0.11.0rc0-py3-none-any.whl
+  register: out
+
+- debug: var=out.stdout_lines
+- debug: var=out.stderr_lines
+
+- name: define second GPU as coriander-tf GPU
+  lineinfile:
+    dest="~/.bash_profile"
+    regexp=''
+    insertafter=EOF
+    create=False
+    line='export CL_GPUOFFSET=1'
+  tags: bash_profile
+
+- name: test coriander
+  shell: |
+    source activate gpu && \
+      python tensorflow/stream_executor/cl/test/test_simple.py && \
+      py.test -v
+  register: out
+  args:
+    chdir: "{{ gpu_install_dir }}/tf-coriander"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/bin"
+    CL_GPUOFFSET: "1"
+
+- debug: var=out.stdout_lines
+- debug: var=out.stderr_lines

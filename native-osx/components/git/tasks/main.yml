@@ -15,3 +15,7 @@
     line='# git auto completion\ntest -f ~/.git-completion.bash\n'
   tags: bash_profile
 
+- name: Install git-lfs plugin
+  shell: |
+    brew install git-lfs
+    git lfs install

@@ -54,24 +54,6 @@
   when: tmp_anaconda_install.stat.exists == False
   tags: bash_profile
 
-- name: Jupyter kernels & presentation mode
-  shell: conda install jupyter nb_conda nbpresent -y --quiet
-
-- name: Install jupyter notebook pdf export
-  shell: conda install nbbrowserpdf -y --quiet
-
-- name: Install all extensions
-  shell: conda install --channel anaconda-nb-extensions anaconda-nb-extensions
-
-- name: Jupyter table of contents
-  shell: |
-    jupyter nbextension install --user https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.js
-    curl -L https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.css > $(jupyter --data-dir)/nbextensions/toc.css
-    jupyter nbextension enable toc
-
-- name: Jupyter git diff
-  shell: |
-    pip install nbdime
-    nbdime reg-extensions --user
-    jupyter nbextension enable nbdime --user --py
+- name: Configure jupyter in conda
+  script: setup_conda_jupyter.sh
 
