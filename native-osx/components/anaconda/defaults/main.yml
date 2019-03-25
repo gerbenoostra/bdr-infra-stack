@@ -1,4 +1,4 @@
 ---
 anaconda_force_install: False
 anaconda_install_dir: "{{ ansible_env.HOME}}/anaconda3"
-anaconda_url: "https://repo.continuum.io/archive/Anaconda3-4.2.0-MacOSX-x86_64.sh"
+anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2018.12-MacOSX-x86_64.sh"

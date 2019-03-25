@@ -13,11 +13,11 @@ To skip the updates, just run:
 
 For most roles there is a corresponding tag. For example:
 
-    ./provision --tags "anaconda"
+    ./provision --tags anaconda
 
 Usefull retry command:
 
-    ./provision.sh --tags "gpu" --limit @/Users/gerben/Projects/geroos-infra-stack/native-osx/provision.retry -v --skip-tags "update" --start-at-task="bazel_end"
+    ./provision.sh --tags "gpu" --limit @./provision.retry -v --skip-tags "update" --start-at-task="bazel_end"
 
 # Setting up your python environment with spark
 

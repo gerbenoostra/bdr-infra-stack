@@ -1,29 +1,44 @@
 #!/bin/bash
+set -x
+set -v
+set -e
+
 conda install jupyter nb_conda nbpresent -y --quiet
 conda install nbbrowserpdf -y --quiet
-conda install --channel anaconda-nb-extensions anaconda-nb-extensions
+# The following line should work, but downgrades everything to py2.7 !?
+# conda install --channel anaconda-nb-extensions anaconda-nb-extensions
+# thus better use the jupyter extensions:
 
-conda install -c conda-forge jupyter_contrib_nbextensions
+# either let conda do everything
+conda install --channel conda-forge jupyter_contrib_nbextensions -y --quiet
+# or, manually install both packages and css&js
+# pip install jupyter_contrib_nbextensions already done using conda
+#jupyter contrib nbextension install
 
-jupyter nbextension install --user https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.js
-curl -L https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.css > $(jupyter --data-dir)/nbextensions/toc.css
-jupyter nbextension enable toc
+# toc2 didn't work, this did:
+# jupyter nbextension install --system https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.js
+# curl -L https://rawgithub.com/minrk/ipython_extensions/master/nbextensions/toc.css > $(jupyter --data-dir)/nbextensions/toc.css
+# jupyter nbextension enable toc
+jupyter nbextension enable toc2/main
 
 # notebook diff
-pip install nbdime
-nbdime reg-extensions --user
-jupyter nbextension enable nbdime --user --py
+conda install nbdime nodejs -y --quiet
+nbdime reg-extensions
+jupyter nbextension enable nbdime --py
 
-# pip install jupyter_contrib_nbextensions already done using conda
-jupyter contrib nbextension install --user
-jupyter nbextension enable freeze/main  --user
-#jupyter nbextension enable toc2/main --user
-jupyter nbextension enable hide_input_all/main --user
-jupyter nbextension enable printview/main --user
+# other extensions
+jupyter nbextension enable freeze/main
+jupyter nbextension enable hide_input/main
+jupyter nbextension enable hide_input_all/main
+jupyter nbextension enable printview/main
+jupyter nbextension enable codefolding/main
+jupyter nbextension enable varInspector/main
 
-pip install yapf
-jupyter nbextension enable code_prettify/code_prettify --user
+# code prettify
+conda install yapf -y --quiet
+jupyter nbextension enable code_prettify/code_prettify
 
-pip install jupyter_nbextensions_configurator
-jupyter nbextensions_configurator enable --user
+# should already be done by the full contrib
+# pip install jupyter_nbextensions_configurator
+jupyter nbextensions_configurator enable
 
