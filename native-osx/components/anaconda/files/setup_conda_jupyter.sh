@@ -42,3 +42,10 @@ jupyter nbextension enable code_prettify/code_prettify
 # pip install jupyter_nbextensions_configurator
 jupyter nbextensions_configurator enable
 
+# disable annoying extensions
+jupyter nbextension disable toc
+jupyter nbextension diable nbpresent/js/nbpresent.min
+
+# fix duplicate installs
+jupyter contrib nbextension uninstall --user
+
